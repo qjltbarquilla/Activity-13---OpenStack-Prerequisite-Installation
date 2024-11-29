@@ -1,0 +1,19 @@
+---
+
+- name: Install OpenStack
+  ansible.builtin.package:
+    name:
+      - python3-openstackclient
+    state: present
+  when: ansible_os_family == "Debian"
+
+- name: Install Message Queue
+  ansible.builtin.package:
+    name: rabbitmq-server
+    state: present
+
+- name: Start and enable RabbitMQ service
+  ansible.builtin.service:
+    name: rabbitmq-server
+    state: started
+    enabled: yes

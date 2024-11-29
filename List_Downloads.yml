@@ -1,0 +1,44 @@
+---
+
+- hosts: all
+  become: true
+  pre_tasks:
+
+  - name: Install Updates (Ubuntu)
+    tags: always
+    apt:
+      upgrade: dist
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Install Updates (CentOS)
+    tags: always
+    dnf:
+      update_cache: yes
+    when: ansible_distribution == "CentOS"
+
+  - name: Ensure the package manager cache is updated (CentOS)
+    ansible.builtin.yum:
+      name: "*"
+      state: latest
+    when: ansible_distribution == "CentOS"
+
+  - name: Ensure the package manager is updated (Ubuntu)
+    ansible.builtin.apt:
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+
+- hosts: database
+  become: true
+  roles:
+    - Database
+
+- hosts: app
+  become: true
+  roles:
+    - App
+
+- hosts: cache-util
+  become: true
+  roles:
+    - Cache

@@ -1,0 +1,24 @@
+---
+
+- name: Install NTP
+  ansible.builtin.yum:
+    name: chrony
+    state: present
+  when: ansible_os_family == "RedHat"
+
+- name: Start and enable NTP service
+  ansible.builtin.service:
+    name: chronyd
+    state: started
+    enabled: yes
+
+- name: Install Memcached
+  ansible.builtin.package:
+    name: memcached
+    state: present
+
+- name: Start and enable Memcached service
+  ansible.builtin.service:
+    name: memcached
+    state: started
+    enabled: yes
